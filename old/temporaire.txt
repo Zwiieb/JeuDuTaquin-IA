@@ -1,0 +1,36 @@
+    # getter / setter
+    # c'est quoi tout ca ??????
+    ###
+    if True :
+        @property
+        def _value(self):
+            return self.__value
+
+        @_value.setter
+        def _value(self, _x):
+            self.__value = _x
+
+        @property
+        def _parent(self):
+            return self.__parent
+
+        @_parent.setter
+        def _parent(self, _x):
+            self.__parent = _x
+
+        @property
+        def _left(self):
+            return self.__left
+
+        @_left.setter
+        def _left(self, _x):
+            self.__left = _x
+
+        @property
+        def _right(self):
+            return self.__right
+
+        @_right.setter
+        def _right(self, _x):
+            self.__right = _x
+###
