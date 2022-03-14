@@ -21,7 +21,6 @@ class Node:
 	# --------------------------------------------
 	# fonction qui cherche une valeur donnée dans l'arbre
 	# --------------------------------------------
-	
 	def search(self, valeur, trace=0):
 		# par défaut, on n'a pas trouvé la valeur
 		trouve = False
@@ -97,77 +96,84 @@ class Node:
 			retour = self.rot_droite()
 		
 		return retour
-
+	
 	# --------------------------------------------
 	# fonction qui supprime un noeud
 	# --------------------------------------------
-				
-	def remove(self, arbre, _x, trace):
+	
+	def remove(self, x, arbre=None, trace=0):
+		if not arbre:
+			arbre = self
 		if trace == 1:
-			print("x:", _x)
-			print("value:", self.__value)
+			print("x:", x)
+			print("valeur:", self.__valeur)
 		
 		# recherche du noeud
-		if _x < self.__value:
+		if x < self.__valeur:
 			if trace == 1:
 				print("navigation dans gauche")
 			if self.__gauche is not None:
-				Node.remove(self.__gauche, arbre, _x, trace)
+				arbre.remove(x, self.__gauche, trace)
 			else:
 				print("Le nombre n'est pas dans le graphe")
-		elif _x > self.__value:
+		elif x > self.__valeur:
 			if trace == 1:
 				print("navigation dans droite")
 			if self.__droite is not None:
-				Node.remove(self.__droite, arbre, _x, trace)
+				arbre.remove(x,self.__droite, trace)
 			else:
 				print("Le nombre n'est pas dans le graphe")
 		
 		# suppression du noeud
-		elif _x == self.__value:
+		elif x == self.__valeur:
 			if trace == 1:
-				print("début suppression de ", _x)
+				print("début suppression de ", x)
 			# si le noeud n'a pas de fils on le supprime en supprimant son accès
 			if self.__droite is None and self.__gauche is None:
 				if trace == 1:
 					print("pas enfant")
-				if self.__parent.__gauche == self:
-					self.__parent.__gauche = None
-				elif self.__parent.__droite == self:
-					self.__parent.__droite = None
+				if self.__pere.__gauche == self:
+					self.__pere.__gauche = None
+				elif self.__pere.__droite == self:
+					self.__pere.__droite = None
 			# s'il n'a pas de fils à droite on attribue sa branche de gauche à son parent
 			elif self.__droite is None:
 				if trace == 1:
 					print("pas a droite")
-				if self.__parent.__droite == self:
-					self.__parent.__droite = self.__gauche
-				elif self.__parent.__gauche == self:
-					self.__parent.__gauche = self.__gauche
+				if self.__pere.__droite == self:
+					self.__pere.__droite = self.__gauche
+				elif self.__pere.__gauche == self:
+					self.__pere.__gauche = self.__gauche
 				else:
 					print("ERREUR")
 			# s'il n'a pas de fils à gauche on attribue sa branche de droite à son parent
 			elif self.__gauche is None:
 				if trace == 1:
 					print("pas a gauche")
-				if self.__parent.__gauche == self:
-					self.__parent.__gauche = self.__droite
-				elif self.__parent.__droite == self:
-					self.__parent.__droite = self.__droite
+				if self.__pere.__gauche == self:
+					self.__pere.__gauche = self.__droite
+				elif self.__pere.__droite == self:
+					self.__pere.__droite = self.__droite
 				else:
 					print("ERREUR")
 			# s'il a 2 fils
 			else:
+				if trace > 0:
+					print("le noeud a 2 fils")
+				"""
 				temporaire = self
-				newObj = self.close_of()
+				newObj = self.profondeur_max()
 				self.__dict__.update(newObj.__dict__)
-				print("tempo:", temporaire.value)
-				test = temporaire.close_of()
+				print("tempo:", temporaire.valeur())
+				test = temporaire.profondeur_max()
 				print("test:", test)
-				print("tempo close:", temporaire.close_of().value)
-				arbre.remove(arbre, temporaire.close_of().value, 0)
+				print("tempo close:", temporaire.profondeur_max().value)
+				arbre.remove(temporaire.profondeur_max().value, arbre)
+				"""
 	
 	# 2 return dans close of
 	# manque la reattribution des branche de celui quon enleve(3)
+	
 	# --------------------------------------------
 	# fonction qui test le poids(le nombre de fils) d'un noeud
 	# --------------------------------------------
@@ -281,3 +287,13 @@ class Node:
 	
 	def set_pere(self, _x):
 		self.__pere = _x
+		
+def creation_arbre(liste,trace=0):
+	tree = Node(liste[0])
+	for i in range(1, len(liste)):
+		if trace > 0:
+			print("Insertion de la valeur ", liste[i], " dans l'arbre :")
+		tree = tree.insert(liste[i])
+		if trace > 0:
+			tree.affiche()
+	return tree

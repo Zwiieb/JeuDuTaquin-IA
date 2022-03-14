@@ -13,7 +13,7 @@ print("poid",tree.right.weight() - tree.left.weight())
 #tree.pprint()
 
 # on peut remarquer que cet arbre est désiquilibré
-# https://perso.univ-lemans.fr/~lbarra/L2-SPI/CoursAlgoSPI_4_AVLEquilibrage_etd.pdf
+# https://perso.univ-lemans.fr/~lbarra/L2-SPI/CoursAlgoSPI_4CoursAlgoSPI_4_AVLEquilibrage_etd_AVLEquilibrage_etd.pdf
 
 
 for i in range(1,10):
