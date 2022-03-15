@@ -22,8 +22,8 @@ def resolution(taquin):
 	a2 = Node.Node(taquin)
 	abr.affiche()
 	a2.affiche()
-	print(abr.get_valeur().get_heuristique())
-	print(abr.search(abr.get_valeur().get_heuristique(), 1))
+	print(abr.get_etat().get_heuristique())
+	print(abr.search(abr.get_etat().get_heuristique(), 1))
 
 
 # while abr.get_valeur().
@@ -59,17 +59,25 @@ def creation_arbre(liste, trace=0):
 
 # création du jeu
 taquin = Taquin.Taquin(3)
-t2 = Taquin.Taquin(4)
+t2 = Taquin.Taquin(3)
+t3 = Taquin.Taquin(3)
 
 # création du noeud racine de l'abr
 abr = Node.Node(taquin)
 
 # insert le jeu de taquin t2 dans l'abr
-abr.inserer(t2)
+print("insert t2:")
+abr = abr.inserer(t2)
+
+abr.affiche()
+
+print("\n")
+print("insert t3:")
+
+
 
 # affiche l'abr d'heuristique du taquin
 abr.affiche()
-
 # copie de l'état initial pour la fin
 etat_initial = taquin.get_liste().copy()
 
