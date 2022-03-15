@@ -1,20 +1,5 @@
 import random
 
-"""
-class Node:
-	def __init__(self, etat, actions):
-		# liste représentant l'état du jeu
-		self.__etat = etat
-
-		self.__actions = actions
-		self.__fils_gauche = fils_gauche
-		self.__fils_droit = fils_droit
-		self.__heuristique = self.heuristique()
-
-	def heuristique(self):
-		return 1
-"""
-
 
 class Taquin:
 	
