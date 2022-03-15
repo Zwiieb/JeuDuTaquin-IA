@@ -48,15 +48,15 @@ class Node:
 	# Fonction d'insertion
 	# fonction qui ajoute un noeud
 	# --------------------------------------------
-	def inserer(self, noeud, trace=0):
+	def inserer(self, taquin, trace=0):
 		retour = self
 		# heuristique du noeud en cours d'ajout
-		h_en_ajout = noeud.__etat.get_heuristique()
+		h_en_ajout = taquin.get_heuristique()
 		# heuristique du noeud en cours d'analyse
 		h_analyse = self.__etat.get_heuristique()
 		if trace >= 1:
-			print("valeur à insérer :", noeud.__etat.get_heuristique())
-			print("Valeur du noeud  : ", self.__etat.get_heuristique(), "\n")
+			print("valeur à insérer :", h_en_ajout)
+			print("Valeur du noeud  : ", h_analyse, "\n")
 		
 		# test valeur en ajout et valeur du noeud
 		if h_en_ajout < h_analyse:
@@ -64,24 +64,24 @@ class Node:
 			if not self.__gauche:
 				if trace > 0:
 					print("on créer a gauche")
-				self.__gauche = Node(noeud)
+				self.__gauche = Node(taquin)
 			else:
 				# on navigue vers le noeud de gauche
 				if trace > 0:
 					print("on navigue a gauche")
-				self.__gauche = self.__gauche.inserer(noeud, trace)
+				self.__gauche = self.__gauche.inserer(taquin, trace)
 		# test valeur du noeud et valeur en ajout
 		elif h_en_ajout > h_analyse:
 			# s'il n'y a pas de noeud à droite on en créer un
 			if not self.__droite:
 				if trace > 0:
 					print("on créer a droite le noeud:",h_en_ajout)
-				self.__droite = Node(noeud)
+				self.__droite = Node(taquin)
 			else:
 				if trace > 0:
 					print("on navigue a droite")
 				# on navigue vers le noeud de droite
-				self.__droite = self.__droite.inserer(h_en_ajout, noeud)
+				self.__droite = self.__droite.inserer(h_en_ajout, taquin)
 		
 		# equilibrate ?
 		if self.__droite:
@@ -227,15 +227,13 @@ class Node:
 	# fonction qui affiche l'arbre dans la console
 	# --------------------------------------------
 	def affiche(self, etage=0):
-		print(self)
-		print(self.__etat)
+		# on navigue à droite s'il existe
 		if self.__droite:
-			print("on navigue à droite")
 			self.__droite.affiche(etage + 1)
-		print("on ecrit le nombre ",self.__etat.get_heuristique())
+		# on écrit laa valeur de l'heuristique du noeud
 		print(f"{' ' * 4 * etage}{self.__etat.get_heuristique()}")
+		# on navigue à gauche s'il existe
 		if self.__gauche:
-			print("on navigue a gauche")
 			self.__gauche.affiche(etage + 1)
 	
 	# --------------------------------------------

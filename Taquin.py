@@ -1,20 +1,5 @@
 import random
 
-"""
-class Node:
-	def __init__(self, etat, actions):
-		# liste représentant l'état du jeu
-		self.__etat = etat
-
-		self.__actions = actions
-		self.__fils_gauche = fils_gauche
-		self.__fils_droit = fils_droit
-		self.__heuristique = self.heuristique()
-
-	def heuristique(self):
-		return 1
-"""
-
 
 class Taquin:
 	
@@ -24,14 +9,16 @@ class Taquin:
 	def __init__(self, __nb):
 		self.nb = __nb
 		# self.liste = [0, 1, 2, 3, 4, 5, 6, "x", 7]
-		self.__liste = self.nouvelle_plateau()
+		self.__liste = self.nouveau_plateau()
 		self.__bingo = False
 		
 		# initialisation de la solution recherchée
-		self.solution = []
+		self.etat_cible = []
 		for i in range((self.nb * self.nb) - 1):
-			self.solution.append(i)
-		self.solution.append("x")
+			self.etat_cible.append(i)
+		self.etat_cible.append("x")
+		
+		self.__heuristique = self.heuristique_plateau()
 	
 	# --------------------------------------------
 	# méthodes
@@ -47,9 +34,10 @@ class Taquin:
 			print("x:", x, "y:", y)
 		
 		# position où elle doit être
-		x_cible, y_cible = self.cart(valeur, self.solution)
+		x_cible, y_cible = self.cart(valeur, self.etat_cible)
 		if trace > 0:
-			print("x:", x_cible, "y:", y_cible)
+			print("x_cible:", x_cible, "y_cible:", y_cible)
+			print("heuristique de la case ",valeur,":",abs(x_cible - x) + abs(y_cible - y))
 		
 		#   heuristique du nombre
 		return abs(x_cible - x) + abs(y_cible - y)
@@ -68,7 +56,7 @@ class Taquin:
 	# --------------------------------------------
 	# fonction qui créée le plateau de jeu
 	# --------------------------------------------
-	def nouvelle_plateau(self):
+	def nouveau_plateau(self):
 		self.__liste = []
 		for i in range(self.nb * self.nb - 1):
 			self.__liste.append(i)
@@ -179,7 +167,7 @@ class Taquin:
 	# fonction qui vérifie si le plateau est en état de solution
 	# --------------------------------------------
 	def check(self, trace=0):
-		if self.__liste == self.solution:
+		if self.__liste == self.etat_cible:
 			# la solution est trouvée
 			self.__bingo = True
 			print("BINGO !")
@@ -208,9 +196,10 @@ class Taquin:
 				self.check()
 		
 		print("Réussie !!!!")
-	
 	# --------------------------------------------
 	#   Getter/Setter
 	# --------------------------------------------
 	def get_liste(self):
 		return self.__liste
+	def get_heuristique(self):
+		return  self.__heuristique
