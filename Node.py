@@ -59,7 +59,7 @@ class Node:
 			print("Valeur du noeud  : ", h_analyse, "\n")
 		
 		# test valeur en ajout et valeur du noeud
-		if h_en_ajout < h_analyse:
+		if h_en_ajout <= h_analyse:
 			# s'il n'y a pas de noeud à gauche on en créer un
 			if not self.__gauche:
 				if trace > 0:
@@ -75,13 +75,13 @@ class Node:
 			# s'il n'y a pas de noeud à droite on en créer un
 			if not self.__droite:
 				if trace > 0:
-					print("on créer a droite le noeud:",h_en_ajout)
+					print("on créer a droite le noeud:", h_en_ajout)
 				self.__droite = Node(taquin)
 			else:
 				if trace > 0:
 					print("on navigue a droite")
 				# on navigue vers le noeud de droite
-				self.__droite = self.__droite.inserer(h_en_ajout, taquin)
+				self.__droite = self.__droite.inserer(taquin)
 		
 		# equilibrate ?
 		if self.__droite:
@@ -96,8 +96,8 @@ class Node:
 		
 		if trace >= 1:
 			print("Valeur du noeud : ", self.__etat.get_heuristique())
-			print("Poids gauche = ", poids_droite)
-			print("Poids droit  = ", poids_gauche)
+			print("Poids droit  = ", poids_droite)
+			print("Poids gauche = ", poids_gauche)
 		
 		# regarde si les branches ont un écart supérieur à 1
 		if poids_droite > poids_gauche + 1:
@@ -131,11 +131,6 @@ class Node:
 		elif valeur > self.__valeur:
 			self.__droite = self.__droite.supprime(valeur, trace)
 		else:
-			# On est sur le noeud qui possède la valeur à supprimer
-			# Plusieurs cas possibles :
-			# voir
-			# https://www.delftstack.com/tutorial/data-structure/binary-search-tree-delete/
-			
 			# cas 1 : c'est une feuille !
 			if self.__gauche is None and self.__droite is None:
 				retour = None
@@ -240,7 +235,7 @@ class Node:
 	# fonction qui affiche le noeud dans la console
 	# --------------------------------------------
 	def affiche_noeud(self):
-		print(self.__etat)
+		print(self.__etat.get_heuristique())
 	
 	# --------------------------------------------
 	# getter / setter
@@ -257,8 +252,8 @@ class Node:
 	def get_droite(self):
 		return self.__droite
 	
-	def get_valeur(self):
+	def get_etat(self):
 		return self.__etat
 	
-	def set_valeur(self, x):
+	def set_etat(self, x):
 		self.__etat = x

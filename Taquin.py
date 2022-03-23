@@ -2,10 +2,7 @@ import random
 
 
 class Taquin:
-	
-	# --------------------------------------------
 	# constructeur
-	# --------------------------------------------
 	def __init__(self, __nb):
 		self.nb = __nb
 		# self.liste = [0, 1, 2, 3, 4, 5, 6, "x", 7]
@@ -37,7 +34,7 @@ class Taquin:
 		x_cible, y_cible = self.cart(valeur, self.etat_cible)
 		if trace > 0:
 			print("x_cible:", x_cible, "y_cible:", y_cible)
-			print("heuristique de la case ",valeur,":",abs(x_cible - x) + abs(y_cible - y))
+			print("heuristique de la case ", valeur, ":", abs(x_cible - x) + abs(y_cible - y))
 		
 		#   heuristique du nombre
 		return abs(x_cible - x) + abs(y_cible - y)
@@ -177,29 +174,38 @@ class Taquin:
 	def jeu(self):
 		self.afficher_plateau()
 		while not self.__bingo:
+			print("Haut :   h")
+			print("Bas :    b")
+			print("Gauche : g")
+			print("Droite : d")
+			print("Fin : 0")
 			choix = input("Quel est votre choix ? ")
-			if choix == "haut":
+			if choix == "h":
 				self.mov_nord()
 				self.afficher_plateau()
 				self.check()
-			if choix == "bas":
+			if choix == "b":
 				self.mov_sud()
 				self.afficher_plateau()
 				self.check()
-			if choix == "gauche":
+			if choix == "g":
 				self.mov_ouest()
 				self.afficher_plateau()
 				self.check()
-			if choix == "droite":
+			if choix == "d":
 				self.mov_est()
 				self.afficher_plateau()
 				self.check()
-		
+			if choix == "0":
+				quit()
+				
 		print("Réussie !!!!")
+	
 	# --------------------------------------------
 	#   Getter/Setter
 	# --------------------------------------------
 	def get_liste(self):
 		return self.__liste
+	
 	def get_heuristique(self):
-		return  self.__heuristique
+		return self.__heuristique

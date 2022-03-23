@@ -36,9 +36,9 @@ class Node:
 			trouve = True
 		elif valeur < self.__value:
 			if self.__left != None:
-				trouve = self.__left.search(valeur, trace)
+				trouve = self.__left.search(valeur)
 		elif self.__right != None:
-			trouve = self.__right.search(valeur, trace)
+			trouve = self.__right.search(valeur)
 		return trouve
 
 	# --------------------------------------------
