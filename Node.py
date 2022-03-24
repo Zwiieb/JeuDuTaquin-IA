@@ -1,6 +1,3 @@
-import Taquin
-
-
 class Node:
 	# constructeur
 	def __init__(self, etat):
@@ -48,64 +45,52 @@ class Node:
 	# Fonction d'insertion
 	# fonction qui ajoute un noeud
 	# --------------------------------------------
-	def inserer(self, taquin, trace=0):
+	def inserer(self, valeur, trace=0):
 		retour = self
-		# heuristique du noeud en cours d'ajout
-		h_en_ajout = taquin.get_heuristique()
-		# heuristique du noeud en cours d'analyse
-		h_analyse = self.__etat.get_heuristique()
 		if trace >= 1:
-			print("valeur à insérer :", h_en_ajout)
-			print("Valeur du noeud  : ", h_analyse, "\n")
+			print("valeur à insérer :", valeur)
+			print("Valeur du noeud  : ", self.__etat, "\n")
 		
 		# test valeur en ajout et valeur du noeud
-		if h_en_ajout <= h_analyse:
+		if valeur <= self.__etat:
 			# s'il n'y a pas de noeud à gauche on en créer un
-			if not self.__gauche:
-				if trace > 0:
-					print("on créer a gauche")
-				self.__gauche = Node(taquin)
+			if self.__gauche is None:
+				self.__gauche = Node(valeur)
 			else:
 				# on navigue vers le noeud de gauche
-				if trace > 0:
-					print("on navigue a gauche")
-				self.__gauche = self.__gauche.inserer(taquin, trace)
+				self.__gauche = self.__gauche.inserer(valeur, trace)
 		# test valeur du noeud et valeur en ajout
-		elif h_en_ajout > h_analyse:
+		elif valeur > self.__etat:
 			# s'il n'y a pas de noeud à droite on en créer un
-			if not self.__droite:
-				if trace > 0:
-					print("on créer a droite le noeud:", h_en_ajout)
-				self.__droite = Node(taquin)
+			if self.__droite is None:
+				self.__droite = Node(valeur)
 			else:
-				if trace > 0:
-					print("on navigue a droite")
 				# on navigue vers le noeud de droite
-				self.__droite = self.__droite.inserer(taquin)
+				self.__droite = self.__droite.inserer(valeur, trace)
 		
-		# equilibrate ?
+		# equilibrage ?
 		if self.__droite:
-			poids_droite = self.__droite.profondeur_max() + 1
+			poids_right = self.__droite.profondeur_max() + 1
 		else:
-			poids_droite = 0
+			poids_right = 0
 		
 		if self.__gauche:
-			poids_gauche = self.__gauche.profondeur_max() + 1
+			poids_left = self.__gauche.profondeur_max() + 1
 		else:
-			poids_gauche = 0
+			poids_left = 0
 		
 		if trace >= 1:
-			print("Valeur du noeud : ", self.__etat.get_heuristique())
-			print("Poids droit  = ", poids_droite)
-			print("Poids gauche = ", poids_gauche)
+			print("Valeur du noeud : ", self.__etat)
+			print("Poids gauche = ", poids_right)
+			print("Poids droit  = ", poids_left)
 		
 		# regarde si les branches ont un écart supérieur à 1
-		if poids_droite > poids_gauche + 1:
+		if poids_right > poids_left + 1:
 			if trace >= 1:
 				print("Déséquilibré => rotation gauche")
 			retour = self.rot_gauche()
 		
-		elif poids_droite + 1 < poids_gauche:
+		elif poids_right + 1 < poids_left:
 			if trace >= 1:
 				print("Déséquilibre => rotation droite")
 			retour = self.rot_droite()
@@ -116,35 +101,77 @@ class Node:
 	# Fonction qui retourne la valeur la plus petite de l'arbre
 	# --------------------------------------------
 	def donne_min(self):
-		retour = self.__etat.get_heuristique()
-		if self.__gauche:
+		retour = self.__etat
+		if self.__gauche != None:
 			retour = self.__gauche.donne_min()
 		return retour
 	
 	# --------------------------------------------
+	# Fonction qui retourne la valeur la plus petite entre 2 taquins pour la fonction supprime
+	# --------------------------------------------
+	'''def plus_petit_que(self,autre_taquin):
+		if self.__etat.get_heuristique() < autre_taquin.get_heuristique() and self.__etat.
+	'''
+	# --------------------------------------------
 	# Fonction qui supprime une valeur de l'arbre
 	# --------------------------------------------
 	def supprime(self, valeur, trace=0):
+		if trace > 0:
+			print("Début de la méthode supprime, avec => ", valeur)
+			print("On se trouve sur le noeud ", self)
 		retour = self
-		if valeur < self.__valeur:
+		if valeur < self.__etat:
+			if trace > 0:
+				print("On part à gauche")
 			self.__gauche = self.__gauche.supprime(valeur, trace)
-		elif valeur > self.__valeur:
+		elif valeur > self.__etat:
+			if trace > 0:
+				print("On part à droite")
 			self.__droite = self.__droite.supprime(valeur, trace)
 		else:
+			# On est sur le noeud qui possède la valeur a supprimer
+			# Plusieurs cas possibles :
+			# voir
+			# https://www.delftstack.com/tutorial/data-structure/binary-search-tree-delete/
+			
 			# cas 1 : c'est une feuille !
-			if self.__gauche is None and self.__droite is None:
+			if trace > 0:
+				print("On a trouvé ce que l'on cherche : ", self)
+			if self.__gauche == None and self.__droite == None:
+				if trace > 0:
+					print("Pas d'enfants => on efface le noeud")
 				retour = None
 			# cas 2 : le noeud possède qu'une seule feuille
-			elif self.__gauche is None:
+			elif self.__gauche == None:
+				if trace > 0:
+					print("Qu'une feuille à droite, on retourne=> ", self.__droite)
 				retour = self.__droite
-			elif self.__droite is None:
+			elif self.__droite == None:
+				if trace > 0:
+					print("Qu'une feuille à gauche, on retourne=> ", self.__gauche)
 				retour = self.__gauche
 			else:
 				# cas 3 : il y a des valeurs à droite et à gauche !
+				if trace > 0:
+					print("Deux feuilles")
 				valeur_min = self.__droite.donne_min()
-				self.__valeur = valeur_min
+				if trace > 0:
+					print("On cherche le min => ", valeur_min)
+				self.__etat = valeur_min
+				if trace > 0:
+					print("On supprime la valeur min")
 				self.__droite = self.__droite.supprime(valeur_min, trace)
-		
+		if trace > 0:
+			print("Fin de la méthode supprime, on retourne=> ", retour)
+		return retour
+	
+	# --------------------------------------------
+	# Fonction qui retourne la valeur la plus petite de l'arbre
+	# --------------------------------------------
+	def donne_noeud_min(self):
+		retour = self
+		if self.__gauche != None:
+			retour = self.__gauche.donne_min()
 		return retour
 	
 	# --------------------------------------------
@@ -226,7 +253,7 @@ class Node:
 		if self.__droite:
 			self.__droite.affiche(etage + 1)
 		# on écrit laa valeur de l'heuristique du noeud
-		print(f"{' ' * 4 * etage}{self.__etat.get_heuristique()}")
+		print(' ' * 4 * etage, self.__etat.get_heuristique(), ": ", self.__etat, "/", self)
 		# on navigue à gauche s'il existe
 		if self.__gauche:
 			self.__gauche.affiche(etage + 1)
