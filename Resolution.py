@@ -1,3 +1,4 @@
+import time
 from copy import deepcopy
 
 import Node
@@ -6,8 +7,11 @@ import Node
 class Resolution:
 	# constructeur
 	def __init__(self, taquin):
+		# le jeu de taquin qu'on va résoudre
 		self.__taquin = taquin
+		# arbre binaire de recherche pour trier les taquins pas encore analysés
 		self.__non_visite = Node.Node(taquin)
+		# liste des états de taquins déjà analysés
 		self.__visite = []
 		
 		# nombre de noeuds
@@ -17,26 +21,26 @@ class Resolution:
 	# méthodes
 	# --------------------------------------------
 	
-	# penser a somme h et len(actions)
+	# --------------------------------------------
+	# méthode coeur de la résolution
+	# --------------------------------------------
 	def resolution(self):
-		nb = 0
+		# pour calculer le temps d'exécution
+		debut = time.process_time()
+		# variable qui stock le nombre d'états analysés avant de trouver la solution
+		nb_evaluation = 0
 		trouve = False
 		
 		while not trouve:
 			# recuperation du noeud avec la plus petite valeur
 			taquin_min = self.__non_visite.donne_min()
-			nb += 1
+			# incrémentation du nombre d'états testés
+			nb_evaluation += 1
 			
-			print("Plateau envisagé ", nb, " : ")
-			taquin_min.afficher_plateau()
-			print("Arbre : ")
-			self.__non_visite.affiche()
-			print("Taquin => ", taquin_min)
-			input()
-			
+			# on l'a trouvé
 			if taquin_min.get_plateau() == self.__taquin.etat_cible:
-				# print("deja vu !")
 				trouve = True
+			# ou pas
 			else:
 				# envisage tous les coups possibles
 				coups_possibles = taquin_min.deplacements_possibles()
@@ -44,27 +48,35 @@ class Resolution:
 				for i in coups_possibles:
 					# création d'une copie du taquin pour ne pas le modifier
 					taquin_temp = deepcopy(taquin_min)
+					taquin_temp.set_etat_initial(taquin_min.get_etat_initial())
+					
 					# ajoute le noeud en analyse dans les noeuds visités
 					self.__visite.append(taquin_min)
-					taquin_temp.mouvement[i.lower()](True)
+					taquin_temp.mouvement[i](True)
+					
 					# si taquin_temp n'a pas deja été visité
 					if not self.deja_vu(taquin_temp):
 						# on l'ajoute a l'arbre binaire
 						self.__non_visite = self.__non_visite.inserer(taquin_temp)
 						# on incrémente le nombre de noeuds
 						self.nb_noeuds += 1
-				print("Arbre  avant suppression : ")
-				self.__non_visite.affiche()
-				self.__non_visite = self.__non_visite.supprime(taquin_min, 1)
-				print("Arbre  après suppression : ")
-				self.__non_visite.affiche()
-		print("fin!! \n les mouvements sont :", taquin_min.get_actions(), " en ", nb, " evaluations")
+				
+				# suppression du taquin analysé de l'abr des taquins non visités
+				self.__non_visite, _ = self.__non_visite.supprime(taquin_min)
+				
+		# variable qui stock le temps de la fin du programme
+		fin = time.process_time()
+		print("fin!! \n les mouvements sont :", taquin_min.get_actions().upper(), " en ", nb_evaluation, " evaluations")
+		print("la solution à été trouvée en :", fin - debut, 'secondes')
 		return taquin_min
 	
+	# --------------------------------------------
+	# méthode qui détermine si on a déjà analysé le taquin
+	# --------------------------------------------
 	def deja_vu(self, taquin):
 		retour = False
 		i = 0
 		while i < len(self.__visite) and not retour:
-			retour = taquin.est_egal(self.__visite[i])
+			retour = taquin == self.__visite[i]
 			i += 1
 		return retour
