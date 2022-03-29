@@ -40,13 +40,6 @@ class Resolution:
 			if nb_evaluation%1000==0 :
 				print("Calcul en cours, ",nb_evaluation)
 			
-			"""print("Plateau envisagé ", nb_evaluation, " : ")
-			taquin_min.afficher_plateau()
-			print("Arbre : ")
-			self.__non_visite.affiche()
-			print("Taquin => ", taquin_min)
-			input()"""
-			
 			# on l'a trouvé
 			if taquin_min.get_plateau() == self.__taquin.etat_cible:
 				trouve = True
@@ -79,9 +72,9 @@ class Resolution:
 				
 		# variable qui stock le temps de la fin du programme
 		fin = time.process_time()
-		print("fin!! \n les mouvements sont :", taquin_min.get_actions().upper(), " en ", nb_evaluation, " evaluations")
-		print("la solution à été trouvée en :", fin - debut, 'secondes')
-		return taquin_min
+		#print("fin!! \n les mouvements sont :", taquin_min.get_actions().upper(), " en ", nb_evaluation, " evaluations")
+		#print("la solution à été trouvée en :", fin - debut, 'secondes')
+		return taquin_min,nb_evaluation,fin - debut
 	
 	# --------------------------------------------
 	# méthode qui détermine si on a déjà analysé le taquin

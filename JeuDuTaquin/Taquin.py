@@ -20,26 +20,26 @@ class Taquin:
 		# variable qui va stocker le timing du début d'exécution du programme
 		self.start = None
 		
-		
-		
-		
 		# ICI
 		# ca ca marche et ca donne :[9, 8, 7, 6, 5, 4, 3, 2, 1]
-		self.poids = [self.nb * self.nb - 1 - i for i in range(self.nb * self.nb)]
+		# self.poids = [self.nb * self.nb - 1 - i for i in range(self.nb * self.nb)]
 		# mais ca ca marche pas
-		self.poids1 = [8, 7, 6, 5, 4, 3, 2, 1, 0]
 		# ni ca qui donne : [8, 7, 6, 5, 4, 3, 2, 1, 0]
 		# self.heuristic = [self.nb * self.nb-1 - i for i in range(self.nb * self.nb)]
 		
-		#et donc ca, ce que je vouais tester, ca ne fonctionne pas non plus
-		self.poids2 =[32, 12, 12, 4, 1, 1, 4, 1]
+		self.h1 = [32, 12, 12, 4, 1, 1, 4, 1, 4]
 		
-		self.poids3 =[1 for i in range(self.nb * self.nb)]
+		self.h2 = [8, 7, 6, 5, 4, 3, 2, 1, 1]
 		
-		# j'utilise ces tableau ligne 129
+		self.h3 = [8, 7, 6, 5, 4, 3, 2, 1, 4]
 		
+		self.h4 = [8, 7, 6, 5, 3, 2, 4, 1, 4, 1]
 		
+		self.h5 = [8, 7, 6, 5, 3, 2, 4, 1, 4, 4]
 		
+		self.h6 = [1 for i in range(self.nb * self.nb)]
+		
+		self.heuristic = self.h6
 		
 		# dictionnaire de mouvement
 		self.mouvement = {'h': self.mov_nord,
@@ -70,7 +70,7 @@ class Taquin:
 			self.__etat_initial = deepcopy(self)
 		else:
 			self.__etat_initial = etat_initial
-		
+	
 	# --------------------------------------------
 	# surcharge d'opérateurs
 	# --------------------------------------------
@@ -128,8 +128,8 @@ class Taquin:
 		# ajoute l'heuristique de chaque case
 		for i in self.__plateau:
 			if i != 'x':
-				heuristique += self.heuristique_case(i)*self.poids3[i]
-		
+				heuristique += self.heuristique_case(i) * self.heuristic[i]
+		heuristique = heuristique / self.heuristic[(self.nb**2)-1]
 		# pour avoir la fonction d'évaluation : heuristique(mouvement théorique) + nombre de mouvement(réel)
 		heuristique += len(self.__actions)
 		
@@ -141,7 +141,7 @@ class Taquin:
 	def shuffle_plateau(self):
 		liste_actions = []
 		liste_actions_possible = ['h', 'b', 'g', 'd']
-		for _ in range(random.randint(self.nb*1000, self.nb*10000)):
+		for _ in range(random.randint(self.nb * 1000, self.nb * 10000)):
 			i = random.randint(0, 3)
 			liste_actions.append(liste_actions_possible[i])
 		for i in liste_actions:
@@ -312,7 +312,7 @@ class Taquin:
 		# pour calculer le temps de jeu
 		if self.start is None:
 			self.start = time.time()
-			
+		
 		# tant que la solution n'est pas trouvée
 		while not self.__bingo:
 			self.afficher_plateau()
@@ -337,8 +337,8 @@ class Taquin:
 				self.mouvement[choix](True)
 				self.check()
 				self.afficher_plateau()
-				
-		# si la solution à été trouvée à la main on félicite le joueur
+		
+		# si la solution a été trouvée à la main on félicite le joueur
 		if not resolution_utilise:
 			print("Temps mis pour finir le jeu:", time.time() - self.start, "secondes")
 			print("Réussie !!!!")
@@ -366,8 +366,11 @@ class Taquin:
 	
 	def get_plateau(self):
 		return self.__plateau
-	def set_plateau(self,plateau):
+	
+	def set_plateau(self, plateau):
 		self.__plateau = plateau
+		self.recalcule_heuristique()
+		self.__etat_initial = self
 	
 	def get_etat_initial(self):
 		return self.__etat_initial
