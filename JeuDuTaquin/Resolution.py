@@ -36,9 +36,9 @@ class Resolution:
 			taquin_min = self.__non_visite.donne_min()
 			# incrémentation du nombre d'états testés
 			nb_evaluation += 1
-
-			if nb_evaluation%1000==0 :
-				print("Calcul en cours, ",nb_evaluation)
+			
+			if nb_evaluation % 1000 == 0:
+				print("Calcul en cours, ", nb_evaluation)
 			
 			# on l'a trouvé
 			if taquin_min.get_plateau() == self.__taquin.etat_cible:
@@ -64,17 +64,16 @@ class Resolution:
 						# on incrémente le nombre de noeuds
 						self.nb_noeuds += 1
 				
-				#print("Arbre  avant suppression : ")
-				#self.__non_visite.affiche()
-
 				# suppression du taquin analysé de l'abr des taquins non visités
 				self.__non_visite, _ = self.__non_visite.supprime(taquin_min)
-				
+		
 		# variable qui stock le temps de la fin du programme
 		fin = time.process_time()
-		#print("fin!! \n les mouvements sont :", taquin_min.get_actions().upper(), " en ", nb_evaluation, " evaluations")
-		#print("la solution à été trouvée en :", fin - debut, 'secondes')
-		return taquin_min,nb_evaluation,fin - debut
+		print("fin!! \n les mouvements sont :", taquin_min.get_actions().upper())
+		print("La solution a été trouve en ", nb_evaluation, " evaluations,")
+		print("en",len(taquin_min.get_actions()),"actions,")
+		print("et en :", fin - debut, 'secondes')
+		return taquin_min, nb_evaluation, fin - debut
 	
 	# --------------------------------------------
 	# méthode qui détermine si on a déjà analysé le taquin

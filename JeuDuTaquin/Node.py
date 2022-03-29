@@ -82,23 +82,23 @@ class Node:
 		flag_suppression = False
 		retour = self
 		
-		#print("Entrée dans supprime avec self=",self," et valeur = ",valeur)
+		# print("Entrée dans supprime avec self=",self," et valeur = ",valeur)
 		
 		if valeur < self.__etat:
-			#print("La valeur est plus petite donc on va à gauche")
+			# print("La valeur est plus petite donc on va à gauche")
 			
 			# on navigue à gauche
 			if self.__gauche != None:
 				self.__gauche, flag_suppression = self.__gauche.supprime(valeur)
 		elif valeur > self.__etat:
-			#print("La valeur est plus petite donc on va à droite")
-
+			# print("La valeur est plus petite donc on va à droite")
+			
 			# on navigue à droite
 			if self.__droite != None:
 				self.__droite, flag_suppression = self.__droite.supprime(valeur)
 		else:
-			#print("La valeur est =")
-
+			# print("La valeur est =")
+			
 			# On est sur le noeud qui possède la valeur à supprimer
 			if self.__etat == valeur:
 				# c'est bien la valeur à effacer !
@@ -124,13 +124,13 @@ class Node:
 					# on supprime la valeur min
 					self.__droite, trouve = self.__droite.supprime(valeur_min)
 			else:
-				#print("Pas la valeur que l'on cherche !")
+				# print("Pas la valeur que l'on cherche !")
 				if self.__gauche != None:
-					#print("On va regarder à gauche")
+					# print("On va regarder à gauche")
 					self.__gauche, flag_suppression = self.__gauche.supprime(valeur)
 				# On regarde maintenant si on a effacé la valeur. Sinon c'est qu'elle se trouve à droite
 				if not flag_suppression:
-					#print("Pas trouvé à gauche. On va regarder à droite !")
+					# print("Pas trouvé à gauche. On va regarder à droite !")
 					if self.__droite != None:
 						self.__droite, flag_suppression = self.__droite.supprime(valeur)
 		# fin de la méthode on renvoie 'retour'

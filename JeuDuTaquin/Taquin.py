@@ -20,26 +20,17 @@ class Taquin:
 		# variable qui va stocker le timing du début d'exécution du programme
 		self.start = None
 		
-		# ICI
-		# ca ca marche et ca donne :[9, 8, 7, 6, 5, 4, 3, 2, 1]
-		# self.poids = [self.nb * self.nb - 1 - i for i in range(self.nb * self.nb)]
-		# mais ca ca marche pas
-		# ni ca qui donne : [8, 7, 6, 5, 4, 3, 2, 1, 0]
-		# self.heuristic = [self.nb * self.nb-1 - i for i in range(self.nb * self.nb)]
+		# dictionnaire pour choisir les heuristiques
+		self.heuristiques = {'h': [self.nb * self.nb - i for i in range(self.nb * self.nb)],
+							 'h1': [32, 12, 12, 4, 1, 1, 4, 1, 4],
+							 'h2': [8, 7, 6, 5, 4, 3, 2, 1, 1],
+							 'h3': [8, 7, 6, 5, 4, 3, 2, 1, 4],
+							 'h4': [8, 7, 6, 5, 3, 2, 4, 1, 1],
+							 'h5': [8, 7, 6, 5, 3, 2, 4, 1, 4],
+							 'h6': [1 for i in range(self.nb * self.nb)]}
 		
-		self.h1 = [32, 12, 12, 4, 1, 1, 4, 1, 4]
-		
-		self.h2 = [8, 7, 6, 5, 4, 3, 2, 1, 1]
-		
-		self.h3 = [8, 7, 6, 5, 4, 3, 2, 1, 4]
-		
-		self.h4 = [8, 7, 6, 5, 3, 2, 4, 1, 4, 1]
-		
-		self.h5 = [8, 7, 6, 5, 3, 2, 4, 1, 4, 4]
-		
-		self.h6 = [1 for i in range(self.nb * self.nb)]
-		
-		self.heuristic = self.h6
+		# choix d'heuristique de base
+		self.choix_heuristique = self.heuristiques['h']
 		
 		# dictionnaire de mouvement
 		self.mouvement = {'h': self.mov_nord,
@@ -128,8 +119,8 @@ class Taquin:
 		# ajoute l'heuristique de chaque case
 		for i in self.__plateau:
 			if i != 'x':
-				heuristique += self.heuristique_case(i) * self.heuristic[i]
-		heuristique = heuristique / self.heuristic[(self.nb**2)-1]
+				heuristique += self.heuristique_case(i) * self.choix_heuristique[i]
+		heuristique = heuristique / self.choix_heuristique[(self.nb ** 2) - 1]
 		# pour avoir la fonction d'évaluation : heuristique(mouvement théorique) + nombre de mouvement(réel)
 		heuristique += len(self.__actions)
 		
@@ -148,6 +139,7 @@ class Taquin:
 			# le False indique que le taquin n'enregistre pas les déplacements dans 'actions'
 			self.mouvement[i](False)
 		self.recalcule_heuristique()
+		# pour éviter de retrouver l'état initial et avoir un plateau mélangé
 		if self.__plateau == self.etat_cible:
 			self.shuffle_plateau()
 	
@@ -328,9 +320,9 @@ class Taquin:
 			if choix not in ['h', 'b', 'd', 'g', '0', 'R']:
 				self.jeu()
 			if choix == 'R':
-				print(self.__etat_initial.afficher_plateau())
+				self.__etat_initial.afficher_plateau()
 				r = Resolution.Resolution(self)
-				solution = r.resolution()
+				solution, _, _ = r.resolution()
 				self.__bingo = True
 				resolution_utilise = True
 			else:
@@ -377,3 +369,6 @@ class Taquin:
 	
 	def set_etat_initial(self, etat_initial):
 		self.__etat_initial = etat_initial
+	
+	def set_heuristique(self, heuristique):
+		self.choix_heuristique = self.heuristiques[heuristique]
