@@ -38,7 +38,7 @@ class Resolution:
 			nb_evaluation += 1
 			
 			if nb_evaluation % 1000 == 0:
-				print("Calcul en cours, ", nb_evaluation)
+				print("Calcul en cours, ", nb_evaluation,"états analysés")
 			
 			# on l'a trouvé
 			if taquin_min.get_plateau() == self.__taquin.etat_cible:
